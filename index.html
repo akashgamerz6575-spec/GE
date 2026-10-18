@@ -74,18 +74,56 @@ nav{display:flex;align-items:center;justify-content:space-between;height:72px}
   cursor:pointer;color:var(--ink);padding:0;position:relative;z-index:70;touch-action:manipulation;
 }
 .burger span{display:block;width:22px;height:2px;background:currentColor;margin:5px auto;transition:.3s ease}
-.burger.open span:nth-child(1){transform:translateY(3.5px) rotate(45deg)}
-.burger.open span:nth-child(2){transform:translateY(-3.5px) rotate(-45deg)}
 
 @media(max-width:820px){
-  .burger{display:block}
-  .links{
-    position:fixed;inset:0;background:var(--bg);flex-direction:column;justify-content:center;
-    align-items:center;gap:32px;transform:translateY(-100%);opacity:0;
-    transition:.45s cubic-bezier(.7,0,.2,1);z-index:65;padding:calc(40px + env(safe-area-inset-top,0px)) 24px calc(40px + env(safe-area-inset-bottom,0px));
-  }
-  .links.open{transform:none;opacity:1}
-  .links a{font:400 clamp(1.9rem,6.5vw,2.5rem) var(--serif);padding:8px 16px;text-align:center}
+  .links{display:none !important}
+  .burger{display:flex;flex-direction:column;justify-content:center;align-items:center}
+}
+
+/* Dedicated Fullscreen Mobile Menu Overlay */
+.mobile-menu{
+  position:fixed;inset:0;width:100vw;height:100vh;height:100dvh;
+  background:var(--bg);z-index:9999;visibility:hidden;opacity:0;
+  transform:translateY(-14px);transition:opacity .3s ease,transform .3s ease,visibility .3s ease;
+  overflow-y:auto;-webkit-overflow-scrolling:touch;
+}
+.mobile-menu.open{
+  visibility:visible;opacity:1;transform:none;
+}
+.mobile-menu-inner{
+  min-height:100%;display:flex;flex-direction:column;justify-content:space-between;
+  padding:calc(16px + env(safe-area-inset-top,0px)) clamp(20px,5vw,36px) calc(32px + env(safe-area-inset-bottom,0px));
+  box-sizing:border-box;
+}
+.mobile-menu-top{
+  display:flex;align-items:center;justify-content:space-between;height:56px;
+  border-bottom:1px solid var(--line);padding-bottom:14px;
+}
+.mobile-menu-close{
+  background:none;border:1px solid var(--line);border-radius:50%;width:42px;height:42px;
+  display:flex;align-items:center;justify-content:center;color:var(--ink);cursor:pointer;
+  transition:.25s;touch-action:manipulation;
+}
+.mobile-menu-close:hover,.mobile-menu-close:active{
+  border-color:var(--clay);color:var(--clay);transform:scale(1.08);
+}
+.mobile-nav-links{
+  list-style:none;padding:36px 0;display:flex;flex-direction:column;gap:18px;margin:auto 0;
+}
+.mobile-nav-links li{border-bottom:1px solid var(--line);padding-bottom:16px}
+.mobile-nav-links a{
+  text-decoration:none;font:400 clamp(2.1rem,7.5vw,2.8rem)/1.1 var(--serif);
+  display:flex;align-items:baseline;justify-content:space-between;color:var(--ink);
+  transition:color .25s,transform .25s;
+}
+.mobile-nav-links a small{
+  font:500 .72rem var(--sans);letter-spacing:.22em;color:var(--clay);text-transform:uppercase;
+}
+.mobile-nav-links a:hover,.mobile-nav-links a:active{
+  color:var(--clay);transform:translateX(6px);
+}
+.mobile-menu-bottom{
+  padding-top:20px;border-top:1px solid var(--line);
 }
 
 /* Hero Section */
@@ -335,9 +373,31 @@ footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:16px}
     <svg class="theme-sun" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
     <svg class="theme-moon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
   </button>
-  <button class="burger" id="bg" aria-label="Menu" aria-expanded="false"><span></span><span></span></button>
+  <button class="burger" id="bg" aria-label="Open menu" aria-expanded="false"><span></span><span></span></button>
 </div>
 </nav></div></header>
+
+<!-- Dedicated Fullscreen Mobile Menu (immune to header stacking/backdrop-filter) -->
+<div class="mobile-menu" id="mobile-menu" aria-hidden="true">
+  <div class="mobile-menu-inner">
+    <div class="mobile-menu-top">
+      <a class="logo" href="#top">GoodEarth <b>Futures</b></a>
+      <button class="mobile-menu-close" id="menu-close" aria-label="Close navigation">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <ul class="mobile-nav-links">
+      <li><a href="#practice"><small>01</small><span>Practice</span></a></li>
+      <li><a href="#approach"><small>02</small><span>Approach</span></a></li>
+      <li><a href="#work"><small>03</small><span>Work</span></a></li>
+      <li><a href="#contact"><small>04</small><span>Contact</span></a></li>
+    </ul>
+    <div class="mobile-menu-bottom">
+      <span class="eyebrow" style="margin-bottom:6px">GoodEarth Futures · Since 1991</span>
+      <p style="color:var(--mute);font-size:.85rem;line-height:1.4">Designing Sustainable Places<br>Building Resilient Ecosystems</p>
+    </div>
+  </div>
+</div>
 
 <main id="top">
 <div class="hero">
@@ -630,17 +690,22 @@ $('#fm').onsubmit=e=>{
   };
 };
 
-// Mobile Nav with burger animation & body scroll lock
-const bg=$('#bg'),lk=$('#links');
-function toggleMenu(open){
-  const isOpen=open!==undefined?open:!lk.classList.contains('open');
-  lk.classList.toggle('open',isOpen);
-  bg.classList.toggle('open',isOpen);
-  bg.setAttribute('aria-expanded',isOpen);
-  document.body.classList.toggle('menu-open',isOpen);
+// Robust Fullscreen Mobile Navigation
+const bg=$('#bg'),mm=$('#mobile-menu'),mc=$('#menu-close');
+function openMenu(){
+  mm.classList.add('open');
+  mm.setAttribute('aria-hidden','false');
+  document.body.classList.add('menu-open');
 }
-bg.onclick=()=>toggleMenu();
-lk.onclick=e=>{if(e.target.tagName==='A')toggleMenu(false)};
+function closeMenu(){
+  mm.classList.remove('open');
+  mm.setAttribute('aria-hidden','true');
+  document.body.classList.remove('menu-open');
+}
+bg.onclick=openMenu;
+mc.onclick=closeMenu;
+$$('.mobile-nav-links a').forEach(a=>a.onclick=closeMenu);
+addEventListener('keydown',e=>e.key==='Escape'&&closeMenu());
 
 // Header scroll elevation
 addEventListener('scroll',()=>$('#hd').classList.toggle('s',scrollY>30),{passive:true});
